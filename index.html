@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUGRANI Coin Collector</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1f2b, #0d1018);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff8c00, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .coin-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .coin-count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .coin-label {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .coin-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff8c00, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coin-image:active {
+            transform: scale(0.95);
+        }
+        
+        .coin-image img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+        
+        .tap-text {
+            position: absolute;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            pointer-events: none;
+            opacity: 0;
+            animation: tapFloat 1s ease-out;
+        }
+        
+        @keyframes tapFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .conversion {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .conversion h3 {
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(45deg, #ff8c00, #ffd700);
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+        
+        .energy-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .energy-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #00ffaa, #00b7ff);
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        
+        .tabs {
+            display: flex;
+            width: 100%;
+            margin-top: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .tab.active {
+            opacity: 1;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .tab-content {
+            width: 100%;
+            display: none;
+            padding: 15px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .referral-section {
+            background: rgba(0, 183, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 10px;
+        }
+        
+        .referral-code {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .referral-history {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .referral-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .coin-image {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .coin-count {
+                font-size: 20px;
+            }
+            
+            .stat-value {
+                font-size: 16px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-img">R</div>
+                <div class="logo-text">RUGRANI</div>
+            </div>
+            <div class="coin-display">
+                <div class="coin-count" id="coinCount">0</div>
+                <div class="coin-label">COINS</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <h2>Tap to Collect RUGRANI Coins!</h2>
+            <div class="coin-image" id="coin">
+                <img src="https://i.ibb.co/3Y1DPzjf/copilot-image-1756042986392.png" alt="RUGRANI Coin" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23ffd700%22 /><text x=%2250%22 y=%2255%22 font-size=%2220%22 text-anchor=%22middle%22 fill=%22%23000%22>R</text></svg>'">
+            </div>
+            
+            <div class="energy-bar">
+                <div class="energy-fill" id="energyFill"></div>
+            </div>
+            <div>Energy: <span id="energy">100</span>/100</div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="tapPower">1</div>
+                    <div class="stat-label">Tap Power</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalTaps">0</div>
+                    <div class="stat-label">Total Taps</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="rugraniCoins">0</div>
+                    <div class="stat-label">RUGRANI</div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="main">Main</div>
+                <div class="tab" data-tab="referral">Referral</div>
+                <div class="tab" data-tab="history">History</div>
+            </div>
+            
+            <div class="tab-content active" id="main-tab">
+                <div class="conversion">
+                    <h3>Exchange Rate</h3>
+                    <p>2000 Coins = 1 RUGRANI Coin</p>
+                    <div class="buttons">
+                        <button class="btn" id="swapBtn">Swap to RUGRANI</button>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-secondary" id="upgradeBtn">Upgrade Tap Power (1000 coins)</button>
+                    <button class="btn btn-secondary" id="energyBtn">Buy Energy (500 coins)</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="referral-tab">
+                <div class="referral-section">
+                    <h3><i class="fas fa-user-plus"></i> Referral Program</h3>
+                    <p>Invite friends and earn 200 coins for each referral!</p>
+                    
+                    <div class="referral-code">
+                        <span id="referralCode">Loading...</span>
+                        <button class="btn" id="copyRefBtn">Copy</button>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-value" id="referralCount">0</div>
+                        <div class="stat-label">Total Referrals</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="history-tab">
+                <h3>Referral History</h3>
+                <div class="referral-history" id="referralHistory">
+                    <div class="referral-item">
+                        <span>No referrals yet</span>
+                        <span>0 coins</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>RUGRANI Coin Collector - Not affiliated with Telegram or Hamster Kombat</p>
+            <p>This is a demo interface for educational purposes</p>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let coins = 0;
+        let totalTaps = 0;
+        let tapPower = 1;
+        let energy = 100;
+        let rugraniCoins = 0;
+        let referralCount = 0;
+        let referralCode = '';
+        let referralHistory = [];
+        
+        // DOM elements
+        const coinCountElement = document.getElementById('coinCount');
+        const coinElement = document.getElementById('coin');
+        const tapPowerElement = document.getElementById('tapPower');
+        const totalTapsElement = document.getElementById('totalTaps');
+        const rugraniCoinsElement = document.getElementById('rugraniCoins');
+        const energyElement = document.getElementById('energy');
+        const energyFillElement = document.getElementById('energyFill');
+        const swapBtn = document.getElementById('swapBtn');
+        const upgradeBtn = document.getElementById('upgradeBtn');
+        const energyBtn = document.getElementById('energyBtn');
+        const referralCountElement = document.getElementById('referralCount');
+        const referralCodeElement = document.getElementById('referralCode');
+        const copyRefBtn = document.getElementById('copyRefBtn');
+        const referralHistoryElement = document.getElementById('referralHistory');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Initialize the game
+        function initGame() {
+            // Load saved data from localStorage
+            const savedData = localStorage.getItem('rugraniGameData');
+            
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                coins = data.coins || 0;
+                totalTaps = data.totalTaps || 0;
+                tapPower = data.tapPower || 1;
+                energy = data.energy || 100;
+                rugraniCoins = data.rugraniCoins || 0;
+                referralCount = data.referralCount || 0;
+                referralCode = data.referralCode || generateReferralCode();
+                referralHistory = data.referralHistory || [];
+            } else {
+                // Generate a new referral code if first time
+                referralCode = generateReferralCode();
+            }
+            
+            // Check for referral parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            
+            if (ref && ref !== referralCode) {
+                // Add referral bonus (simulate server-side processing)
+                setTimeout(() => {
+                    coins += 200;
+                    referralHistory.push({ code: ref, date: new Date().toLocaleDateString(), earned: 200 });
+                    updateUI();
+                    saveGameData();
+                    alert('You received 200 coins from a referral!');
+                }, 1000);
+            }
+            
+            updateUI();
+            updateReferralHistory();
+        }
+        
+        // Generate a random referral code
+        function generateReferralCode() {
+            return 'RUGRANI' + Math.floor(1000 + Math.random() * 9000);
+        }
+        
+        // Update the UI with current game state
+        function updateUI() {
+            coinCountElement.textContent = coins.toLocaleString();
+            tapPowerElement.textContent = tapPower;
+            totalTapsElement.textContent = totalTaps.toLocaleString();
+            rugraniCoinsElement.textContent = rugraniCoins.toLocaleString();
+            energyElement.textContent = energy;
+            energyFillElement.style.width = `${energy}%`;
+            referralCountElement.textContent = referralCount;
+            referralCodeElement.textContent = referralCode;
+            
+            // Update button states
+            upgradeBtn.disabled = coins < 1000;
+            energyBtn.disabled = coins < 500;
+            swapBtn.disabled = coins < 2000;
+            
+            // Visual feedback for disabled buttons
+            upgradeBtn.style.opacity = coins < 1000 ? 0.5 : 1;
+            energyBtn.style.opacity = coins < 500 ? 0.5 : 1;
+            swapBtn.style.opacity = coins < 2000 ? 0.5 : 1;
+        }
+        
+        // Update referral history display
+        function updateReferralHistory() {
+            if (referralHistory.length === 0) {
+                referralHistoryElement.innerHTML = `
+                    <div class="referral-item">
+                        <span>No referrals yet</span>
+                        <span>0 coins</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            referralHistoryElement.innerHTML = '';
+            referralHistory.forEach(ref => {
+                const item = document.createElement('div');
+                item.className = 'referral-item';
+                item.innerHTML = `
+                    <span>${ref.code} (${ref.date})</span>
+                    <span>+${ref.earned} coins</span>
+                `;
+                referralHistoryElement.appendChild(item);
+            });
+        }
+        
+        // Save game data to localStorage
+        function saveGameData() {
+            const gameData = {
+                coins,
+                totalTaps,
+                tapPower,
+                energy,
+                rugraniCoins,
+                referralCount,
+                referralCode,
+                referralHistory
+            };
+            
+            localStorage.setItem('rugraniGameData', JSON.stringify(gameData));
+        }
+        
+        // Handle tap on the coin
+        coinElement.addEventListener('click', (e) => {
+            if (energy <= 0) return;
+            
+            // Add coins based on tap power
+            coins += tapPower;
+            totalTaps++;
+            energy -= 1;
+            
+            // Create floating text animation
+            const tapText = document.createElement('div');
+            tapText.className = 'tap-text';
+            tapText.textContent = `+${tapPower}`;
+            tapText.style.left = `${e.offsetX}px`;
+            tapText.style.top = `${e.offsetY}px`;
+            coinElement.appendChild(tapText);
+            
+            // Remove the text after animation completes
+            setTimeout(() => {
+                tapText.remove();
+            }, 1000);
+            
+            // Update UI and save data
+            updateUI();
+            saveGameData();
+        });
+        
+        // Swap coins for RUGRANI
+        swapBtn.addEventListener('click', () => {
+            if (coins >= 2000) {
+                const rugraniAmount = Math.floor(coins / 2000);
+                rugraniCoins += rugraniAmount;
+                coins -= rugraniAmount * 2000;
+                updateUI();
+                saveGameData();
+                
+                // Show confirmation
+                alert(`Successfully swapped ${rugraniAmount * 2000} coins for ${rugraniAmount} RUGRANI!`);
+            }
+        });
+        
+        // Upgrade tap power
+        upgradeBtn.addEventListener('click', () => {
+            if (coins >= 1000) {
+                coins -= 1000;
+                tapPower += 1;
+                updateUI();
+                saveGameData();
+                
+                // Show confirmation
+                alert('Tap power upgraded! You now earn more coins per tap.');
+            }
+        });
+        
+        // Buy energy
+        energyBtn.addEventListener('click', () => {
+            if (coins >= 500) {
+                coins -= 500;
+                energy = 100;
+                updateUI();
+                saveGameData();
+                
+                // Show confirmation
+                alert('Energy fully restored!');
+            }
+        });
+        
+         // Copy referral code
+        copyRefBtn.addEventListener('click', () => {
+            const referralLink = `${window.location.origin}${window.location.pathname}?ref=${referralCode}`;
+            navigator.clipboard.writeText(referralLink)
+                .then(() => {
+                    alert('Referral link copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        });
+        
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Deactivate all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+                
+                // Activate current tab
+                tab.classList.add('active');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Energy regeneration (1% every second)
+        setInterval(() => {
+            if (energy < 100) {
+                energy += 1;
+                updateUI();
+                saveGameData();
+            }
+        }, 1000);
+        
+        // Auto-save every 30 seconds
+        setInterval(() => {
+            saveGameData();
+        }, 30000);
+        
+        // Initialize the game
+        initGame();
+    </script>
+</body>
+</html>
