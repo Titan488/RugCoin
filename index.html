@@ -243,6 +243,7 @@
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.3s;
+            font-size: 14px;
         }
         
         .tab.active {
@@ -290,6 +291,80 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff8c00, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .leaderboard {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .leaderboard-rank {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .rank-1 {
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            color: #000;
+        }
+        
+        .rank-2 {
+            background: linear-gradient(45deg, #c0c0c0, #a0a0a0);
+            color: #000;
+        }
+        
+        .rank-3 {
+            background: linear-gradient(45deg, #cd7f32, #a56c27);
+            color: #000;
+        }
+        
+        .rugrani-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .rugrani-icon {
+            color: #ffd700;
+            font-size: 16px;
+        }
+        
         /* Responsive design */
         @media (max-width: 480px) {
             .coin-image {
@@ -308,6 +383,11 @@
             .buttons {
                 flex-direction: column;
             }
+            
+            .tab {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -321,10 +401,24 @@
             <div class="coin-display">
                 <div class="coin-count" id="coinCount">0</div>
                 <div class="coin-label">COINS</div>
+                <div class="rugrani-display">
+                    <i class="fas fa-coins rugrani-icon"></i>
+                    <span id="rugraniCount">0</span> RUGRANI
+                </div>
             </div>
         </div>
         
         <div class="main-content">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <div>User #<span id="userId">12345</span></div>
+                    <div>Level: <span id="userLevel">1</span></div>
+                </div>
+            </div>
+            
             <h2>Tap to Collect RUGRANI Coins!</h2>
             <div class="coin-image" id="coin">
                 <img src="https://i.ibb.co/3Y1DPzjf/copilot-image-1756042986392.png" alt="RUGRANI Coin" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23ffd700%22 /><text x=%2250%22 y=%2255%22 font-size=%2220%22 text-anchor=%22middle%22 fill=%22%23000%22>R</text></svg>'">
@@ -345,14 +439,15 @@
                     <div class="stat-label">Total Taps</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value" id="rugraniCoins">0</div>
-                    <div class="stat-label">RUGRANI</div>
+                    <div class="stat-value" id="referralCount">0</div>
+                    <div class="stat-label">Referrals</div>
                 </div>
             </div>
             
             <div class="tabs">
                 <div class="tab active" data-tab="main">Main</div>
                 <div class="tab" data-tab="referral">Referral</div>
+                <div class="tab" data-tab="leaderboard">Leaderboard</div>
                 <div class="tab" data-tab="history">History</div>
             </div>
             
@@ -382,8 +477,44 @@
                     </div>
                     
                     <div class="stat">
-                        <div class="stat-value" id="referralCount">0</div>
+                        <div class="stat-value" id="totalReferralCount">0</div>
                         <div class="stat-label">Total Referrals</div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-value" id="referralEarnings">0</div>
+                        <div class="stat-label">Referral Earnings</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="leaderboard-tab">
+                <h3>Top Referrals Leaderboard</h3>
+                <div class="leaderboard" id="leaderboard">
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank rank-1">1</div>
+                        <div>User #38475</div>
+                        <div>42 referrals</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank rank-2">2</div>
+                        <div>User #22891</div>
+                        <div>35 referrals</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank rank-3">3</div>
+                        <div>User #55632</div>
+                        <div>28 referrals</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">4</div>
+                        <div>User #12988</div>
+                        <div>25 referrals</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">5</div>
+                        <div>User #77651</div>
+                        <div>22 referrals</div>
                     </div>
                 </div>
             </div>
@@ -413,24 +544,31 @@
         let energy = 100;
         let rugraniCoins = 0;
         let referralCount = 0;
+        let referralEarnings = 0;
         let referralCode = '';
         let referralHistory = [];
+        let userId = '';
+        let userLevel = 1;
+        let usedReferralCodes = [];
         
         // DOM elements
         const coinCountElement = document.getElementById('coinCount');
+        const rugraniCountElement = document.getElementById('rugraniCount');
         const coinElement = document.getElementById('coin');
         const tapPowerElement = document.getElementById('tapPower');
         const totalTapsElement = document.getElementById('totalTaps');
-        const rugraniCoinsElement = document.getElementById('rugraniCoins');
         const energyElement = document.getElementById('energy');
         const energyFillElement = document.getElementById('energyFill');
         const swapBtn = document.getElementById('swapBtn');
         const upgradeBtn = document.getElementById('upgradeBtn');
         const energyBtn = document.getElementById('energyBtn');
-        const referralCountElement = document.getElementById('referralCount');
+        const totalReferralCountElement = document.getElementById('totalReferralCount');
+        const referralEarningsElement = document.getElementById('referralEarnings');
         const referralCodeElement = document.getElementById('referralCode');
         const copyRefBtn = document.getElementById('copyRefBtn');
         const referralHistoryElement = document.getElementById('referralHistory');
+        const userIdElement = document.getElementById('userId');
+        const userLevelElement = document.getElementById('userLevel');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         
@@ -447,21 +585,28 @@
                 energy = data.energy || 100;
                 rugraniCoins = data.rugraniCoins || 0;
                 referralCount = data.referralCount || 0;
+                referralEarnings = data.referralEarnings || 0;
                 referralCode = data.referralCode || generateReferralCode();
                 referralHistory = data.referralHistory || [];
+                userId = data.userId || generateUserId();
+                userLevel = data.userLevel || 1;
+                usedReferralCodes = data.usedReferralCodes || [];
             } else {
-                // Generate a new referral code if first time
+                // Generate new codes if first time
                 referralCode = generateReferralCode();
+                userId = generateUserId();
             }
             
             // Check for referral parameter in URL
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
             
-            if (ref && ref !== referralCode) {
+            if (ref && ref !== referralCode && !usedReferralCodes.includes(ref)) {
                 // Add referral bonus (simulate server-side processing)
                 setTimeout(() => {
                     coins += 200;
+                    referralEarnings += 200;
+                    usedReferralCodes.push(ref);
                     referralHistory.push({ code: ref, date: new Date().toLocaleDateString(), earned: 200 });
                     updateUI();
                     saveGameData();
@@ -471,22 +616,30 @@
             
             updateUI();
             updateReferralHistory();
+            userIdElement.textContent = userId;
+            userLevelElement.textContent = userLevel;
+        }
+        
+        // Generate a random user ID
+        function generateUserId() {
+            return Math.floor(10000 + Math.random() * 90000).toString();
         }
         
         // Generate a random referral code
         function generateReferralCode() {
-            return 'RUGRANI' + Math.floor(1000 + Math.random() * 9000);
+            return 'RUG' + Math.floor(10000 + Math.random() * 90000);
         }
         
         // Update the UI with current game state
         function updateUI() {
             coinCountElement.textContent = coins.toLocaleString();
+            rugraniCountElement.textContent = rugraniCoins.toLocaleString();
             tapPowerElement.textContent = tapPower;
             totalTapsElement.textContent = totalTaps.toLocaleString();
-            rugraniCoinsElement.textContent = rugraniCoins.toLocaleString();
             energyElement.textContent = energy;
             energyFillElement.style.width = `${energy}%`;
-            referralCountElement.textContent = referralCount;
+            totalReferralCountElement.textContent = referralCount;
+            referralEarningsElement.textContent = referralEarnings;
             referralCodeElement.textContent = referralCode;
             
             // Update button states
@@ -511,7 +664,8 @@
                 `;
                 return;
             }
-            
+
+
             referralHistoryElement.innerHTML = '';
             referralHistory.forEach(ref => {
                 const item = document.createElement('div');
@@ -533,8 +687,12 @@
                 energy,
                 rugraniCoins,
                 referralCount,
+                referralEarnings,
                 referralCode,
-                referralHistory
+                referralHistory,
+                userId,
+                userLevel,
+                usedReferralCodes
             };
             
             localStorage.setItem('rugraniGameData', JSON.stringify(gameData));
@@ -542,7 +700,10 @@
         
         // Handle tap on the coin
         coinElement.addEventListener('click', (e) => {
-            if (energy <= 0) return;
+            if (energy <= 0) {
+                alert("Not enough energy! Wait for it to regenerate or buy more.");
+                return;
+            }
             
             // Add coins based on tap power
             coins += tapPower;
@@ -578,6 +739,8 @@
                 
                 // Show confirmation
                 alert(`Successfully swapped ${rugraniAmount * 2000} coins for ${rugraniAmount} RUGRANI!`);
+            } else {
+                alert("You need at least 2000 coins to swap for RUGRANI!");
             }
         });
         
@@ -591,6 +754,8 @@
                 
                 // Show confirmation
                 alert('Tap power upgraded! You now earn more coins per tap.');
+            } else {
+                alert("You need 1000 coins to upgrade tap power!");
             }
         });
         
@@ -604,19 +769,24 @@
                 
                 // Show confirmation
                 alert('Energy fully restored!');
+            } else {
+                alert("You need 500 coins to buy energy!");
             }
         });
-        
+
          // Copy referral code
         copyRefBtn.addEventListener('click', () => {
-            const referralLink = `${window.location.origin}${window.location.pathname}?ref=${referralCode}`;
-            navigator.clipboard.writeText(referralLink)
-                .then(() => {
-                    alert('Referral link copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
+            const referralLink = `https://t.me/RUGRANIBOT?start=${referralCode}`;
+            
+            // Create a temporary input element to copy text
+            const tempInput = document.createElement('input');
+            tempInput.value = referralLink;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            alert('Referral link copied to clipboard!');
         });
         
         // Tab switching
